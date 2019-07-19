@@ -1,0 +1,134 @@
+version: 2.1
+
+description: |
+  Alcide Advisor is an agentless service for Kubernetes audit and compliance 
+  that’s built to ensure a frictionless and secured DevSecOps workflow by 
+  layering a hygiene scan of Kubernetes cluster & workloads early in the development process 
+  and before moving to production.
+
+  With Alcide Advisor, you can cover the following security checks:
+
+  Kubernetes infrastructure vulnerability scanning.
+  Hunting misplaced secrets, or excessive priviliges for secret access.
+  Workload hardening from Pod Security to network policies.
+  Istio security configuration and best practices.
+  Ingress Controllers for security best practices.
+  Kubernetes API server access privileges.
+  Kubernetes operators security best practices.
+  Deployment conformance to labeling, annotating, resource limits and much more ...
+
+# Orb Dependencies
+orbs:
+  k8s: circleci/kubernetes@0.1.0  
+
+executors:
+  alcide_advisor:
+    description: Alcide Kubernetes Advisor execution environment
+    docker:
+      - image: docker:stable
+
+commands:
+  alcide_advisor_scan:
+    description: Alcide Advisor Kubernetes Cluster Scan
+    parameters:
+      cluster_context:
+        description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+        type: string
+      report_format:
+        description: Report format - html or excel
+        default: html
+        enum:
+          - html
+          - excel
+        type: enum    
+      fail_on_critical:
+        description: Fail the task if critical findings observed.
+        type: boolean
+        default: False
+      alcide_apikey:
+        default: ALCIDE_APIKEY
+        type: env_var_name  
+        description: Alcide API Key. (use env var $ALCIDE_APIKEY to populate).
+      alcide_apiserver:
+        description: Alcide API Server.
+        type: string
+      policy_profile:
+        description: Alcide policy profile the cluster will be scanned against. 
+        type: string
+
+    steps:
+      - run:
+          name: Alcide Advisor Cluster Scan
+          command: |
+            if [[ ! $(which bash) ]]; then
+              (set +o pipefail; apk add bash || apt-get install -y bash || yum install -y bash)
+            fi
+            if [[ ! $(which curl) ]]; then
+              (set +o pipefail; apk add curl || apt-get install -y curl || yum install -y curl)
+            fi
+
+
+jobs:
+  advisor_scan:
+    description: Alcide Kubernetes Advisor Scan Job 
+
+    executor: alcide_advisor
+
+    parameters:
+      cluster_context:
+        description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+        type: string
+      report_format:
+        description: Report format - html or excel
+        default: html
+        enum:
+          - html
+          - excel
+        type: enum    
+      fail_on_critical:
+        description: Fail the task if critical findings observed.
+        type: boolean
+        default: False
+      alcide_apikey:
+        default: ALCIDE_APIKEY
+        type: env_var_name  
+        description: Alcide API Key. (use env var $ALCIDE_APIKEY to populate).
+      alcide_apiserver:
+        description: Alcide API Server.
+        type: string
+      policy_profile:
+        description: Alcide policy profile the cluster will be scanned against. 
+        type: string
+
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - alcide_advisor_scan:
+          cluster_context:  << parameters.cluster_context >>
+          report_format:    << parameters.report_format >>
+          fail_on_critical: << parameters.fail_on_critical >>
+          alcide_apikey:    << parameters.alcide_apikey >>
+          alcide_apiserver: << parameters.alcide_apiserver >>
+          policy_profile:   << parameters.policy_profile >>
+      - store_artifacts:
+          path: advisor-report  
+
+
+examples:
+  advisor_scan:
+    description: Use this job to scan a Kubernetes cluster using the internal profile
+
+    usage:
+      version: 2.1
+      orbs:
+        alcide: alcide/alcide-advisor@1.0.0
+
+      workflows:
+        advisor_scan:
+          jobs:
+            - alcide/advisor_scan:
+                cluster_context: 'myclustercontext'
+                #report_format: 'html'
+                #fail_on_critical: False
+                #alcide_apiserver: ''
+                #policy_profile: ''
