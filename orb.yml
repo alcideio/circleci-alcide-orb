@@ -31,9 +31,9 @@ commands:
   alcide_advisor_scan:
     description: Alcide Advisor Kubernetes Cluster Scan
     parameters:
-      cluster_context:
-        description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
-        type: string
+      # cluster_context:
+      #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+      #   type: string
       report_format:
         description: Report format - html or excel
         default: html
@@ -60,12 +60,36 @@ commands:
       - run:
           name: Alcide Advisor Cluster Scan
           command: |
-            if [[ ! $(which bash) ]]; then
-              (set +o pipefail; apk add bash || apt-get install -y bash || yum install -y bash)
-            fi
-            if [[ ! $(which curl) ]]; then
-              (set +o pipefail; apk add curl || apt-get install -y curl || yum install -y curl)
-            fi
+              REPORT_FORMAT="<< parameters.report_format >>"
+              FAIL_ON_CRITICAL="<< parameters.fail_on_critical >>"
+              ALCIDE_APIKEY="<< parameters.alcide_apikey >>"
+              ALCIDE_APISERVER="<< parameters.alcide_apiserver >>"
+              SCAN_POLICY_PROFILE="<< parameters.policy_profile >>"
+
+              OPT=" "
+
+              #
+              # Profile based scans requires an API KEY 
+              #
+              if [ "${SCAN_POLICY_PROFILE}" == "true" ]; then
+                  OPT="$OPT --policy-profile=$SCAN_POLICY_PROFILE"
+                  OPT="$OPT --alcide-api-key=$ALCIDE_APIKEY --alcide-api-server=$ALCIDE_APISERVER"
+              fi$
+
+              if [ "${FAIL_ON_CRITICAL}" == "true" ]; then
+                  OPT="$OPT --run-mode=pipeline"
+              fi
+
+              if [ "${REPORT_FORMAT}" == "excel" ]; then
+                  OPT="$OPT --output=excel --outfile advisor-report/kube-advisor-report.xlsx"
+              else    
+                  OPT="$OPT --output=html --outfile advisor-report/kube-advisor-report.html"
+              fi
+
+              curl -o kube-advisor https://alcide.blob.core.windows.net/generic/stable/linux/advisor
+              chmod +x kube-advisor
+              export CURRENT_CONTEXT=`kubectl config current-context`
+              ./kube-advisor --eula-sign validate cluster --cluster-context ${CURRENT_CONTEXT} --namespace-include="*" --outfile advisor-report/kube-advisor-report.html
 
 
 jobs:
@@ -75,9 +99,9 @@ jobs:
     executor: alcide_advisor
 
     parameters:
-      cluster_context:
-        description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
-        type: string
+      # cluster_context:
+      #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+      #   type: string
       report_format:
         description: Report format - html or excel
         default: html
@@ -104,7 +128,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - alcide_advisor_scan:
-          cluster_context:  << parameters.cluster_context >>
+          #cluster_context:  << parameters.cluster_context >>
           report_format:    << parameters.report_format >>
           fail_on_critical: << parameters.fail_on_critical >>
           alcide_apikey:    << parameters.alcide_apikey >>
@@ -127,8 +151,8 @@ examples:
         advisor_scan:
           jobs:
             - alcide/advisor_scan:
-                cluster_context: 'myclustercontext'
-                #report_format: 'html'
-                #fail_on_critical: False
+                #cluster_context: 'myclustercontext'
+                report_format: 'html'
+                fail_on_critical: false
                 #alcide_apiserver: ''
                 #policy_profile: ''
