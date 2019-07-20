@@ -145,7 +145,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        alcide: alcide/alcide-advisor@1.0.0
+        alcide: alcideio/alcide-advisor@1.0.0
 
       workflows:
         advisor_scan:
@@ -154,5 +154,5 @@ examples:
                 #cluster_context: 'myclustercontext'
                 report_format: 'html'
                 fail_on_critical: false
-                #alcide_apiserver: ''
-                #policy_profile: ''
+                alcide_apiserver: ''
+                policy_profile: ''

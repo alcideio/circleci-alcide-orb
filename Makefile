@@ -8,10 +8,10 @@ ORB_VER ?= 0.0.1
 .phony: help publish publish-dev validate
 
 publish: validate ##@Build publish
-	circleci orb publish orb.yml styra/cli@$(ORB_VER)
+	circleci orb publish orb.yml alcideio/alcide-advisor@$(ORB_VER)
 
 publish-dev: validate ##@Build publish-dev
-	circleci orb publish orb.yml styra/cli@dev:$(ORB_VER)
+	circleci orb publish orb.yml alcideio/alcide-advisor@dev:$(ORB_VER)
 
 validate:  ##@Build Validate
 	circleci orb validate orb.yml

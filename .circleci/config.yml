@@ -1,43 +1,13 @@
 version: 2.1
-
 orbs:
-  cli: circleci/circleci-cli@0.1.4
-
-executors:
-  cibuilds:
-    docker:
-      - image: cibuilds/base:2019.06
+  alcide: alcideio/alcide-advisor@dev:0.0.1
 
 workflows:
-  main:
+  advisor_scan:
     jobs:
-      - test:
-          filters:
-            tags:
-              # Simplified SemVer regex
-              only: /^\d+\.\d+\.\d+$/
-      - publish:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              # Simplified SemVer regex
-              only: /^\d+\.\d+\.\d+$/
-          context: orb-publishing
-
-jobs:
-  test:
-    executor: cibuilds
-    steps:
-      - checkout
-      - cli/install
-      - run:
-          name: "Validate Orb config"
-          command: circleci orb validate orb.yml
-  publish:
-    executor: cli/default
-    steps:
-      - checkout
-      - run:
-          name: "Publish orb via the CircleCI CLI"
-          command: circleci orb publish orb.yml alcide/alcide-advisor@${CIRCLE_TAG}
+      - alcide/advisor_scan:
+          #cluster_context: 'myclustercontext'
+          report_format: 'html'
+          fail_on_critical: false
+          alcide_apiserver: ''
+          policy_profile: ''
