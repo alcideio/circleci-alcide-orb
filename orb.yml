@@ -74,7 +74,7 @@ commands:
               if [ "${SCAN_POLICY_PROFILE}" == "true" ]; then
                   OPT="$OPT --policy-profile=$SCAN_POLICY_PROFILE"
                   OPT="$OPT --alcide-api-key=$ALCIDE_APIKEY --alcide-api-server=$ALCIDE_APISERVER"
-              fi$
+              fi
 
               if [ "${FAIL_ON_CRITICAL}" == "true" ]; then
                   OPT="$OPT --run-mode=pipeline"
