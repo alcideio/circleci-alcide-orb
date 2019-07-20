@@ -25,7 +25,7 @@ executors:
   alcide_advisor:
     description: Alcide Kubernetes Advisor execution environment
     docker:
-      - image: docker:stable
+      - image: buildpack-deps:xenial
 
 commands:
   alcide_advisor_scan:
