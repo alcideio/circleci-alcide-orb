@@ -124,8 +124,6 @@ jobs:
         type: string
 
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
       - alcide_advisor_scan:
           #cluster_context:  << parameters.cluster_context >>
           report_format:    << parameters.report_format >>
