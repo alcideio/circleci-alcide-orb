@@ -84,9 +84,10 @@ commands:
               curl -o kube-advisor https://alcide.blob.core.windows.net/generic/stable/linux/advisor
               chmod +x kube-advisor
               export CURRENT_CONTEXT=`kubectl config current-context`
-              ./kube-advisor --eula-sign validate cluster --cluster-context ${CURRENT_CONTEXT} --namespace-include="*" --outfile advisor-report/kube-advisor-report.html
+              mkdir -p /tmp/advisor-report
+              ./kube-advisor --eula-sign validate cluster --cluster-context ${CURRENT_CONTEXT} --namespace-include="*" --outfile /tmp/advisor-report/kube-advisor-report.html
       - store_artifacts:
-          path: advisor-report  
+          path: /tmp/advisor-report  
 
 examples:
   advisor_scan:
@@ -94,7 +95,7 @@ examples:
     usage:
       version: 2.1
       orbs:
-        alcide: alcideio/alcide-advisor@dev:1.0.0
+        alcide: alcideio/alcide-advisor@1.0.0
         gcp-cli: circleci/gcp-cli@1.0.6
         gcr: circleci/gcp-gcr@0.0.2
         k8s: circleci/kubernetes@0.3.0  
