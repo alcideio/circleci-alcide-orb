@@ -7,7 +7,7 @@ ORB_VER ?= 1.0.0
 
 .phony: help publish publish-dev validate
 
-publish: validate ##@Build publish
+publish: validate-orb ##@Build publish
 	circleci orb publish orb.yml alcideio/alcide-advisor@$(ORB_VER)
 
 publish-dev: validate-orb ##@Build publish-dev
