@@ -18,8 +18,8 @@ description: |
   Deployment conformance to labeling, annotating, resource limits and much more ...
 
 # Orb Dependencies
-orbs:
-  k8s: circleci/kubernetes@0.1.0  
+orbs:  
+  k8s: circleci/kubernetes@0.3.0
 
 executors:
   alcide_advisor:
@@ -57,6 +57,7 @@ commands:
         type: string
 
     steps:
+      - k8s/install #install kubectl
       - run:
           name: Alcide Advisor Cluster Scan
           command: |
