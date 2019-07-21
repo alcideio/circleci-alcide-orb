@@ -13,8 +13,14 @@ publish: validate ##@Build publish
 publish-dev: validate ##@Build publish-dev
 	circleci orb publish orb.yml alcideio/alcide-advisor@dev:$(ORB_VER)
 
-validate:  ##@Build Validate
+
+validate-config: ##@Build Validate
+	circleci config validate .circleci/config.yml
+    
+validate-orb:  ##@Build Validate
 	circleci orb validate orb.yml
+
+validate-all: validate-config validate-orb
 
 
 HELP_FUN = \
