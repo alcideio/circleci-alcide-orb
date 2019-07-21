@@ -38,7 +38,7 @@ jobs:
           gcloud container clusters get-credentials <<parameters.cluster>>
       - run: |
           echo "Deploy resources into the cluster"
-          kubectl get pods --all-namespace              
+          kubectl get pods --all-namespaces              
 
 
       
