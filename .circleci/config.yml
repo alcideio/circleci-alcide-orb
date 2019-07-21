@@ -4,13 +4,28 @@ orbs:
   gcp-cli: circleci/gcp-cli@1.0.6
   gcr: circleci/gcp-gcr@0.0.2
 
+jobs:
+  gke-get-cluster-credentials:
+    description: Get Cluster Credentials 
+    executor: alcide/alcide_advisor 
+    parameters:
+      cluster_name:
+        description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+        type: string     
+    steps:
+      - run:
+          name: Get Cluster Credentials 
+          command: | 
+            gcloud container clusters get-credentials << parameters.cluster_name >>
+
 workflows:
   advisor_scan:
     jobs:
       - gcp-cli/install_and_initialize_cli:
           context: myContext
-          executor: gcp-cli/default
-      - run: gcloud container clusters get-credentials demo-cluster          
+          #executor: gcp-cli/default
+      - gke-get-cluster-credentials:
+          cluster_name: demo-cluster
       - alcide/advisor_scan:
           #cluster_context: 'myclustercontext'
           report_format: 'html'
