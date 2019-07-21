@@ -21,12 +21,6 @@ description: |
 orbs:  
   k8s: circleci/kubernetes@0.3.0
 
-# executors:
-#   alcide_advisor:
-#     description: Alcide Kubernetes Advisor execution environment
-#     docker:
-#       - image: buildpack-deps:xenial
-
 commands:
   alcide_advisor_scan:
     description: Alcide Advisor Kubernetes Cluster Scan
@@ -94,62 +88,61 @@ commands:
       - store_artifacts:
           path: advisor-report  
 
-# jobs:
-#   advisor_scan:
-#     description: Alcide Kubernetes Advisor Scan Job 
-#     machine: true
-#     parameters:
-#       # cluster_context:
-#       #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
-#       #   type: string
-#       report_format:
-#         description: Report format - html or excel
-#         default: html
-#         enum:
-#           - html
-#           - excel
-#         type: enum    
-#       fail_on_critical:
-#         description: Fail the task if critical findings observed.
-#         type: boolean
-#         default: False
-#       alcide_apikey:
-#         default: ALCIDE_APIKEY
-#         type: env_var_name  
-#         description: Alcide API Key. (use env var $ALCIDE_APIKEY to populate).
-#       alcide_apiserver:
-#         description: Alcide API Server.
-#         type: string
-#       policy_profile:
-#         description: Alcide policy profile the cluster will be scanned against. 
-#         type: string
-
-#     steps:
-#       - alcide_advisor_scan:
-#           #cluster_context:  << parameters.cluster_context >>
-#           report_format:    << parameters.report_format >>
-#           fail_on_critical: << parameters.fail_on_critical >>
-#           alcide_apikey:    << parameters.alcide_apikey >>
-#           alcide_apiserver: << parameters.alcide_apiserver >>
-#           policy_profile:   << parameters.policy_profile >>
-#       - store_artifacts:
-#           path: advisor-report  
-
-
 examples:
   advisor_scan:
-    description: Use this job to scan a Kubernetes cluster using the internal profile
+    description: A Kubernetes Deployment to GKE with Alcide Kubernetes Scan Job
     usage:
       version: 2.1
       orbs:
-        alcide: alcideio/alcide-advisor@1.0.0
+        alcide: alcideio/alcide-advisor@dev:1.0.0
+        gcp-cli: circleci/gcp-cli@1.0.6
+        gcr: circleci/gcp-gcr@0.0.2
+        k8s: circleci/kubernetes@0.3.0  
+
+      jobs:
+        deploy_and_scan_cluster:
+          description: "Deploy resources into a cluster"  
+          machine: true
+          parameters:
+            cluster:
+              description: "The Kubernetes cluster name."
+              type: string
+            gcloud-service-key:
+              description: The gcloud service key
+              type: env_var_name
+              default: GCLOUD_SERVICE_KEY
+            google-project-id:
+              description: The Google project ID to connect with via the gcloud CLI
+              type: env_var_name
+              default: GOOGLE_PROJECT_ID
+            google-compute-zone:
+              description: The Google compute zone to connect with via the gcloud CLI
+              type: env_var_name
+              default: GOOGLE_COMPUTE_ZONE
+          steps:
+            - checkout
+            - gcr/gcr-auth:
+                google-project-id: <<parameters.google-project-id>>
+                google-compute-zone: <<parameters.google-compute-zone>>
+            - gcp-cli/install
+            - k8s/install
+            - run: |
+                gcloud container clusters get-credentials <<parameters.cluster>>
+            - run: |
+                echo "Deploy resources into the cluster"
+                kubectl get pods --all-namespaces  
+            - alcide/alcide_advisor_scan:
+                #cluster_context: 'myclustercontext'
+                report_format: 'html'
+                fail_on_critical: false
+                alcide_apiserver: ''
+                policy_profile: ''                      
+
+
+            
 
       workflows:
         advisor_scan:
           jobs:
-            - alcide/advisor_scan:
-                #cluster_context: 'clustercontext'
-                report_format: 'html'
-                fail_on_critical: false
-                alcide_apiserver: ''
-                policy_profile: ''
+            - deploy_and_scan_cluster:
+                cluster: demo-cluster
