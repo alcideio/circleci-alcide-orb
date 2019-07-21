@@ -21,11 +21,11 @@ description: |
 orbs:  
   k8s: circleci/kubernetes@0.3.0
 
-executors:
-  alcide_advisor:
-    description: Alcide Kubernetes Advisor execution environment
-    docker:
-      - image: buildpack-deps:xenial
+# executors:
+#   alcide_advisor:
+#     description: Alcide Kubernetes Advisor execution environment
+#     docker:
+#       - image: buildpack-deps:xenial
 
 commands:
   alcide_advisor_scan:
@@ -96,9 +96,7 @@ commands:
 jobs:
   advisor_scan:
     description: Alcide Kubernetes Advisor Scan Job 
-
-    executor: alcide_advisor
-
+    machine: true
     parameters:
       # cluster_context:
       #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
@@ -142,7 +140,6 @@ jobs:
 examples:
   advisor_scan:
     description: Use this job to scan a Kubernetes cluster using the internal profile
-
     usage:
       version: 2.1
       orbs:

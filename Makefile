@@ -10,7 +10,7 @@ ORB_VER ?= 0.0.1
 publish: validate ##@Build publish
 	circleci orb publish orb.yml alcideio/alcide-advisor@$(ORB_VER)
 
-publish-dev: validate ##@Build publish-dev
+publish-dev: validate-orb ##@Build publish-dev
 	circleci orb publish orb.yml alcideio/alcide-advisor@dev:$(ORB_VER)
 
 
