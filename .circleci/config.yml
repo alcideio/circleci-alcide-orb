@@ -1,10 +1,16 @@
 version: 2.1
 orbs:
   alcide: alcideio/alcide-advisor@dev:0.0.1
+  gcp-cli: circleci/gcp-cli@1.0.6
+  gcr: circleci/gcp-gcr@0.0.2
 
 workflows:
   advisor_scan:
     jobs:
+      - gcp-cli/install_and_initialize_cli:
+          context: myContext
+          executor: gcp-cli/default
+      - run: gcloud container clusters get-credentials demo-cluster          
       - alcide/advisor_scan:
           #cluster_context: 'myclustercontext'
           report_format: 'html'
