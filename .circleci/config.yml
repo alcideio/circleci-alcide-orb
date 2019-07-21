@@ -36,12 +36,9 @@ jobs:
       - k8s/install
       - run: |
           gcloud container clusters get-credentials <<parameters.cluster>>
-          name: Obtain Cluster credentials for <<parameters.cluster>>
       - run: |
           echo "Deploy resources into the cluster"
-          kubectl get pods --all-namespace    
-          name: Deploy resources into the cluster
-          
+          kubectl get pods --all-namespace              
 
 
       
