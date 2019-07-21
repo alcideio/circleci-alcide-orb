@@ -91,48 +91,49 @@ commands:
               chmod +x kube-advisor
               export CURRENT_CONTEXT=`kubectl config current-context`
               ./kube-advisor --eula-sign validate cluster --cluster-context ${CURRENT_CONTEXT} --namespace-include="*" --outfile advisor-report/kube-advisor-report.html
-
-
-jobs:
-  advisor_scan:
-    description: Alcide Kubernetes Advisor Scan Job 
-    machine: true
-    parameters:
-      # cluster_context:
-      #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
-      #   type: string
-      report_format:
-        description: Report format - html or excel
-        default: html
-        enum:
-          - html
-          - excel
-        type: enum    
-      fail_on_critical:
-        description: Fail the task if critical findings observed.
-        type: boolean
-        default: False
-      alcide_apikey:
-        default: ALCIDE_APIKEY
-        type: env_var_name  
-        description: Alcide API Key. (use env var $ALCIDE_APIKEY to populate).
-      alcide_apiserver:
-        description: Alcide API Server.
-        type: string
-      policy_profile:
-        description: Alcide policy profile the cluster will be scanned against. 
-        type: string
-
-    steps:
-      - alcide_advisor_scan:
-          #cluster_context:  << parameters.cluster_context >>
-          report_format:    << parameters.report_format >>
-          fail_on_critical: << parameters.fail_on_critical >>
-          alcide_apikey:    << parameters.alcide_apikey >>
-          alcide_apiserver: << parameters.alcide_apiserver >>
-          policy_profile:   << parameters.policy_profile >>
       - store_artifacts:
           path: advisor-report  
+
+# jobs:
+#   advisor_scan:
+#     description: Alcide Kubernetes Advisor Scan Job 
+#     machine: true
+#     parameters:
+#       # cluster_context:
+#       #   description: Target Kubernetes cluster context. Use 'kubectl config get-contexts' to list available contexts
+#       #   type: string
+#       report_format:
+#         description: Report format - html or excel
+#         default: html
+#         enum:
+#           - html
+#           - excel
+#         type: enum    
+#       fail_on_critical:
+#         description: Fail the task if critical findings observed.
+#         type: boolean
+#         default: False
+#       alcide_apikey:
+#         default: ALCIDE_APIKEY
+#         type: env_var_name  
+#         description: Alcide API Key. (use env var $ALCIDE_APIKEY to populate).
+#       alcide_apiserver:
+#         description: Alcide API Server.
+#         type: string
+#       policy_profile:
+#         description: Alcide policy profile the cluster will be scanned against. 
+#         type: string
+
+#     steps:
+#       - alcide_advisor_scan:
+#           #cluster_context:  << parameters.cluster_context >>
+#           report_format:    << parameters.report_format >>
+#           fail_on_critical: << parameters.fail_on_critical >>
+#           alcide_apikey:    << parameters.alcide_apikey >>
+#           alcide_apiserver: << parameters.alcide_apiserver >>
+#           policy_profile:   << parameters.policy_profile >>
+#       - store_artifacts:
+#           path: advisor-report  
 
 
 examples:

@@ -8,7 +8,7 @@ orbs:
 
 
 jobs:
-  deploy_to_cluster:
+  deploy_and_scan_cluster:
     description: "Deploy resources into a cluster"  
     machine: true
     parameters:
@@ -38,7 +38,13 @@ jobs:
           gcloud container clusters get-credentials <<parameters.cluster>>
       - run: |
           echo "Deploy resources into the cluster"
-          kubectl get pods --all-namespaces              
+          kubectl get pods --all-namespaces  
+      - alcide/alcide_advisor_scan:
+          #cluster_context: 'myclustercontext'
+          report_format: 'html'
+          fail_on_critical: false
+          alcide_apiserver: ''
+          policy_profile: ''                      
 
 
       
@@ -46,13 +52,5 @@ jobs:
 workflows:
   advisor_scan:
     jobs:
-      - deploy_to_cluster:
+      - deploy_and_scan_cluster:
           cluster: demo-cluster
-      - alcide/advisor_scan:
-          #cluster_context: 'myclustercontext'
-          report_format: 'html'
-          fail_on_critical: false
-          alcide_apiserver: ''
-          policy_profile: ''
-          requires:
-            - deploy_to_cluster 
