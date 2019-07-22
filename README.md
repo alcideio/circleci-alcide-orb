@@ -25,8 +25,8 @@ Try all features free for 30 days
 or, [request a demo](https://get.alcide.io/request-demo)
 
 
-# Alcide Kubernetes Advisor CircleCi Orb
-All orbs are tested with .circleci/config.yaml of this repo. Finished orbs will be published to the public CircleCi orb repository under the alcideio namespace.
+# Alcide Kubernetes Advisor CircleCI Orb
+All orbs are tested with .circleci/config.yml of this repo. Finished orbs will be published to the public CircleCI orb repository under the alcideio namespace.
 
 * To test orb changes, create a branch that starts with `orb_`. 
 * Push the `orb_` branch to origin and a `@dev:alpha` version of the orb will be published. 
