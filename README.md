@@ -34,6 +34,6 @@ All orbs are tested with .circleci/config.yml of this repo. Finished orbs will b
 After the `@dev:alpha` orb is successfully published, a temporary tag that begins with `integration-orb_` will be pushed to the orb's git registry. This tag will trigger all orb tests to be started. Once all tests have passed, the dev orb can be promoted to production.
 
 * Publish dev orb to production - promote major, minor, or patch version based on changes made.
-  * `circleci orb publish promote alcide/alcide-advisor@dev:alpha [major|minor|patch]`
+  * `circleci orb publish promote alcideio/alcide-advisor@dev:alpha [major|minor|patch]`
 
 
