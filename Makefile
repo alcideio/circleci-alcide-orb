@@ -3,7 +3,7 @@
 .SECONDARY:
 .SECONDEXPANSION:
 
-ORB_VER ?= 1.0.0
+ORB_VER ?= 1.0.1
 
 .phony: help publish publish-dev validate
 
