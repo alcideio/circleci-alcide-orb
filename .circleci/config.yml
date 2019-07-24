@@ -17,7 +17,7 @@ jobs:
         type: string
     steps:
       - checkout
-      - gcr/gcr-auth:
+      - gcr/gcr-auth
       - gcp-cli/install
       - k8s/install
       - run: |
