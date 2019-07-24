@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  alcide: alcideio/alcide-advisor@1.0.1
+  alcide: alcideio/alcide-advisor@1.0.2
   gcp-cli: circleci/gcp-cli@1.0.6
   gcr: circleci/gcp-gcr@0.0.2
   k8s: circleci/kubernetes@0.3.0  
