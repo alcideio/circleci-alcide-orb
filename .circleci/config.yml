@@ -17,6 +17,10 @@ jobs:
         type: string
     steps:
       - checkout
+      #
+      # make sure you have the following environment variables defined:
+      # GCLOUD_SERVICE_KEY, GOOGLE_PROJECT_ID, GOOGLE_COMPUTE_ZONE
+      #
       - gcr/gcr-auth
       - gcp-cli/install
       - k8s/install
