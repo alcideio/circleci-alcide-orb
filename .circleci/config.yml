@@ -43,4 +43,4 @@ workflows:
   advisor_scan:
     jobs:
       - deploy_and_scan_cluster:
-          cluster: devel
+          cluster: devel #My target cluster
