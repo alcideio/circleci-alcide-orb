@@ -17,7 +17,7 @@ With Alcide Advisor, you can cover the following security checks:
 
 ![Alcide Kubernetes Advisor](https://d2908q01vomqb2.cloudfront.net/77de68daecd823babbb58edb1c8e14d7106e83bb/2019/06/19/Alcide-Advisor-Amazon-EKS-1.png "Alcide Kubernetes Advisor")
 
-To get a tailor made exprience with **Alcide Kubernetes Advisor** start your risk-free [trial now](https://www.alcide.io/advisor-free-trial/)
+To get a tailor made exprience with **Alcide Kubernetes Advisor** start your 'free forever' [trial now](https://www.alcide.io/advisor-free-trial/)
 
 Try all features free for 30 days
 100% risk free - no automatic purchase after trial ends
