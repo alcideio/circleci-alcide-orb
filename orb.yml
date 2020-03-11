@@ -17,11 +17,13 @@ description: |
   Kubernetes operators security best practices.
   Deployment conformance to labeling, annotating, resource limits and much more ...
 
-  Orb source | https://github.com/alcideio/circleci-alcide-orb
+display:
+  source_url: https://github.com/alcideio/circleci-alcide-orb
+  home_url: https://www.alcide.io/
 
 # Orb Dependencies
 orbs:  
-  k8s: circleci/kubernetes@0.3.0
+  k8s: circleci/kubernetes@0.11
 
 commands:
   alcide_advisor_scan:
